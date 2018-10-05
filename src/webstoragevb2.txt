@@ -1,0 +1,256 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bestelling</title>
+    <script src="jquery.js"></script>
+    <script>
+        class Product{
+            constructor(id, naam, prijs){
+                this.id = id;
+                this.naam = naam;
+                this.prijs = prijs;
+            }
+            toString(){
+                return this.naam + "(" + this.prijs + " €)";
+            }
+        }
+        class Bestellijn {
+            constructor(product, aantal){
+                this.product = product;
+                this.aantal = aantal;
+            }
+            get eenheidsprijs(){
+                return this.product.prijs;
+            }
+            get subtotaal() {
+                return this.product.prijs * this.aantal;
+            }
+            get naam(){
+                return this.product.naam;
+            }
+        }
+        let producten = [
+            new Product(1, "potlood", 2),
+            new Product(2, "gom", 5),
+            new Product(3, "lat", 10)
+        ]
+        $(function(){
+            toonBestellijnen();
+            $select = $('#producten');
+            producten.forEach(p => {
+                $option = $('<option>').val(p.id).text(p);
+                $select.append($option);
+            })
+            $("#btnToevoegen").click(function(){
+                    let productID =  $select.val();
+                    let aantal = parseInt($("#aantal").val());
+                    let product = vindProduct(productID);
+                    let bestellijn = new Bestellijn(product, aantal);
+                    bestellijnen.push(bestellijn);
+                    toonBestellijnen();
+
+
+        });
+
+        function vindProduct (productid){
+                    for (let i =0; i < producten.length; i++){
+                        if( productID == producten[i].id){
+                       return producten[i]
+                    }
+                    return null;
+                }
+        }
+        let bestellijnen = [];
+
+        function toonBestellijnen(){
+            let $bestellijnen = $('#bestellijnen');
+            if (bestellijnen.length == 0){
+                $bestellijnen.hide();
+                return;
+            }
+            else
+                $bestellijnen.show();
+                let $tbodyEl = $("#bestelbody");
+                $tbodyEl.html("")
+                let $tdNaam = $("<td>");
+                let $tdPrijs = $("<td>");
+                let $tdSubtotaal = $("<td>");
+                let $tdAantal = $("<td>");
+                let $trEl = $("<tr>");
+
+                for (i = 0; i < bestellijnen.length; i++){
+                    let productnaam = bestellijnen[i].naam;
+                    $tdNaam.text(productnaam);
+                    $trEl.append($tdNaam);
+                    $tbodyEl.append($trEl);
+                    let productprijs = bestellijnen[i].eenheidsprijs;
+                    $tdPrijs.text(productprijs);
+                    $trEl.append($tdPrijs);
+                    $tbodyEl.append($trEl);
+                    let productAantal = bestellijnen[i].aantal;
+                    $tdAantal.text(productAantal);
+                    $trEl.append($tdAantal);
+                    $tbodyEl.append($trEl);
+                    let productSubtotaal = bestellijnen[i].subtotaal;
+                    $tdSubtotaal.text(productSubtotaal);
+                    $trEl.append($tdSubtotaal);
+                    $tbodyEl.append($trEl);
+
+                }
+
+        }
+        })
+
+
+
+
+    </script>
+</head>
+</head>
+<body>
+    <select name="producten" id="producten">
+    </select><label>Aantal: <input type="number" value="0" id="aantal"></label>
+    <button id="btnToevoegen">Toevoegen</button>
+    <table id="bestellijnen">
+        <thead><tr><th>Naam</th><th>E.P.</th><th>Aantal</th><th>Subtotaal</th></tr></thead>
+        <tbody id="bestelbody"></tbody>
+    </table>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bestelling</title>
+    <script src="jquery.js"></script>
+    <script>
+        class Product{
+            constructor(id, naam, prijs){
+                this.id = id;
+                this.naam = naam;
+                this.prijs = prijs;
+            }
+            toString(){
+                return this.naam + "(" + this.prijs + " €)";
+            }
+        }
+        class Bestellijn {
+            constructor(product, aantal){
+                this.product = product;
+                this.aantal = aantal;
+            }
+            get eenheidsprijs(){
+                return this.product.prijs;
+            }
+            get subtotaal() {
+                return this.product.prijs * this.aantal;
+            }
+            get naam(){
+                return this.product.naam;
+            }
+            set naam(_naam){
+                this.product.naam = _naam;
+            }
+        }
+        let producten = [
+            new Product(1, "potlood", 2),
+            new Product(2, "gom", 5),
+            new Product(3, "lat", 10)
+        ]
+
+        $(function(){
+            let lijnen = localStorage.getItem("bestellijnen");
+            if (lijnen != null){
+                bestellijnen = parseBestellijnen(lijnen);
+            }
+            toonBestellijnen();
+            let $select = $('#producten');
+            producten.forEach(p => {
+                $option = $('<option>').val(p.id).text(p);
+                $select.append($option);
+            })
+            let $btnToevoegen = $('#btnToevoegen');
+            $btnToevoegen.click(toevoegen);
+            toonBestellijnen();
+
+        });
+        let bestellijnen=[];
+        function toevoegen(){
+            let aantal = parseInt($("#aantal").val());
+            let productid = $("#producten").val();
+            let product = vindProduct(productid);
+            let bestellijn = new Bestellijn(product, aantal);
+            bestellijnen.push(bestellijn);
+            let jsonString = JSON.stringify(bestellijnen)
+            localStorage.setItem("bestellijnen", jsonString);
+            toonBestellijnen();
+        }
+        function vindProduct(productid){
+            for(let i=0;i< producten.length;i++){
+                if (producten[i].id == productid){
+                    return producten[i];
+                }
+            }
+            return null;
+        }
+
+        function toonBestellijnen(){
+            let $bestellijnen = $("#bestellijnen");
+            if (bestellijnen.length == 0){
+                $bestellijnen.hide();
+                return;
+            }
+
+            let $bestelbody = $("#bestelbody");
+            $bestelbody.html("");
+            $bestellijnen.show();
+            for(let i=0;i<bestellijnen.length;i++) {
+                let bestellijn = bestellijnen[i];
+                let productnaam = bestellijn.naam;
+                let $tdNaam = $('<td>').text(productnaam);
+                let eenheidsprijs = bestellijn.eenheidsprijs;
+                let $tdEenheidsprijs = $('<td>').text(eenheidsprijs);
+                let aantal = bestellijn.aantal;
+                let $tdAantal = $('<td>').text(aantal);
+                let subtotaal = bestellijn.subtotaal;
+                let $tdSubtotaal = $('<td>').text(subtotaal);
+                let $trow = $('<tr>').append($tdNaam).append($tdEenheidsprijs)
+                                 .append($tdAantal).append($tdSubtotaal);
+                $bestelbody.append($trow);
+            }
+        }
+
+         function parseBestellijnen(jsonString){
+            let lijst = JSON.parse(jsonString);
+            let bestellijnen = [];
+            for(let i=0;i<lijst.length;i++){
+                let id = lijst[i].product.id;
+                let naam = lijst[i].product.naam;
+                let prijs = lijst[i].product.prijs;
+                let aantal = lijst[i].aantal;
+                let product = new Product(id, naam, prijs);
+                bestellijnen.push(new Bestellijn(product, aantal));
+
+            }
+            return bestellijnen;
+        }
+    </script>
+</head>
+<body>
+    <select name="producten" id="producten">
+    </select>
+    <label>Aantal: <input type="number" value="0" id="aantal"></label>
+    <button id="btnToevoegen">Toevoegen</button>
+    <button id="btnClear">verwijder</button>
+    <table id="bestellijnen">
+        <thead><tr><th>Naam</th><th>E.P.</th><th>Aantal</th><th>Subtotaal</th></tr></thead>
+        <tbody id="bestelbody"></tbody>
+    </table>
+</body>
+</html>

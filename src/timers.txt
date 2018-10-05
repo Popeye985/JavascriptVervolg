@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="timer"></div>
+    <button id="btn">Klik mij binnen 5 seconden</button>
+    <script>
+        'use strict';
+        let buttonEl = document.getElementById("btn");
+        let number = setTimeout(teLaat, 5000);
+        buttonEl.addEventListener("click", function(){
+            clearTimeout(number);
+            alert("Op tijd");
+        });
+        function teLaat(){
+            alert("Te laat. Er gebeuren nu gruwelijke dingen met jou.");
+            buttonEl.disabled=true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        main {
+            width:400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 50% 50%;
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+        }
+    </style>
+    <title>Bank</title>
+</head>
+<body>
+    <main>
+        <span>Op de rekening:</span><span id="resultaat"></span>
+        <label for="bedrag">Bedrag: </label>
+        <input type="number" id="bedrag" value="0">
+        <button id="storten">storten</button>
+        <button id="afhalen">afhalen</button>
+    </main>
+    <script src="jquery.js"></script>
+    <script>
+        $(function(){
+            let bedrag = 0;
+            $("#resultaat").text(bedrag);
+            $("#storten").click(function(){
+                let gestortBedrag = parseInt($("#bedrag").val())
+                bedrag = bedrag + gestortBedrag;
+                $("#resultaat").text(bedrag)
+                $("#bedrag").val("0");
+            });
+            $("#afhalen").click(function(){
+                let afgehaaldBedrag = parseInt($("#bedrag").val())
+                bedrag = bedrag - afgehaaldBedrag;
+                $("#resultaat").text(bedrag)
+                $("#bedrag").val("0");
+            })
+
+
+        });
+    </script>
+</body>
+</html>

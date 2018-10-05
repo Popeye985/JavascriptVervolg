@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Winkel</title>
+    <style>
+        #error{
+            color:red;
+            display:none;
+        }
+    </style>
+    <script src="jquery.js"></script>
+    <script>
+        class Product {
+            constructor(naam, prijs){
+                this.naam = naam;
+                this.prijs = prijs;
+            }
+            toString(){
+                return this.naam + "(" + this.prijs + "€)";
+            }
+        }
+        let producten = [new Product("potlood", 5),
+                         new Product("meetlat", 10),
+                         new Product("gom", 7)];
+        $(function(){
+            let $producten =  $('#producten');
+            let $tablebody = $('#tablebody');
+            let $error = $('#error');
+            for(let i=0;i<producten.length;i++){
+                $option = $('<option>');
+                $option.val(producten[i].naam);
+                $option.text(producten[i]);
+                $producten.append($option)
+
+            }
+            $('#aantal').blur(function(){
+                if (!controleerAantal()){
+                    $error.show();
+                }else{
+                    $error.hide();
+                }
+            });
+            $('#btn').click(function(){
+                if (!controleerAantal()){
+                    $error.show();
+                    return;
+                }else{
+                    $error.hide();
+                }
+            let productNaam = $producten.val();
+            let product = producten.find(prod=> prod.naam === productNaam);
+            //for(i=0; i<producten.length;i++){
+            //    if(productNaam == producten[i].naam){
+            //        return producten[i];
+            //    }
+            //} return null;
+
+            let aantal = $("#aantal").val();
+            let $tdNaam =  $('<td>');
+            $tdNaam = $tdNaam.text(productNaam);
+            let $tdPrijs = $('<td>')
+            $tdPrijs= $tdPrijs.text(product.prijs);
+            let $tdAantal = $('<td>')
+            $tdAantal= $tdAantal.text(aantal);
+            let $tdtussenTotaal = $('<td>');
+            let productPrijs = parseInt(product.prijs*aantal)
+            $tdtussenTotaal = $tdtussenTotaal.text(productPrijs);
+            let $tr = $('<tr>');
+            $tr.append($tdNaam);
+            $tr.append($tdPrijs);
+            $tr.append($tdAantal);
+            $tr.append($tdtussenTotaal);
+            $tablebody.append($tr);
+
+            })
+
+            });
+
+
+        function controleerAantal(){
+            aantal = $("#aantal").val();
+            if (aantal =="" || aantal <=0){
+                error.show;
+                return;
+            }
+            //return aantal !== "" && aantal > 0;
+        }
+
+
+
+
+    </script>
+</head>
+<body>
+    <select id="producten"></select>
+    <input type="number" id="aantal" value="0"><button id="btn">Bestellen</button>
+    <div id="error">U moet een positief aantal invullen</div>
+    <table>
+        <thead><tr><th>product</th><th>E.P.</th><th>aantal</th><th>subtotaal</th></tr></thead>
+        <tbody id="tablebody"></tbody>
+    </table>
+</body>
+</html>
